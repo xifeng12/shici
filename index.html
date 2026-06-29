@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>诗词寻览</title>
+    <meta name="description" content="基于中文古诗词 API 的搜索与阅读界面。" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="seal" aria-hidden="true">诗<br />泉</span>
+        <div>
+          <h1>诗词寻览</h1>
+          <p>案头读诗，检索入卷</p>
+        </div>
+      </div>
+
+      <form class="search" id="searchForm">
+        <select id="searchType" aria-label="搜索范围">
+          <option value="all">全部</option>
+          <option value="title">题名</option>
+          <option value="author">作者</option>
+          <option value="content">正文</option>
+        </select>
+        <input id="query" name="query" type="search" value="静夜思" autocomplete="off" placeholder="搜索诗句、作者、诗词标题、关键词" />
+        <button type="submit">搜索</button>
+      </form>
+
+      <div class="actions">
+        <select id="lang" aria-label="语言">
+          <option value="zh-Hans">简体</option>
+          <option value="zh-Hant">繁體</option>
+        </select>
+        <button id="randomBtn" type="button">随机一首</button>
+        <div class="api-status" id="apiStatus">
+          <span class="dot" aria-hidden="true"></span>
+          <span>API 状态</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="shell">
+      <aside class="filters" aria-label="筛选条件">
+        <div class="section-title">
+          <h2>筛选条件</h2>
+          <button id="resetBtn" type="button">重置</button>
+        </div>
+
+        <label>
+          <span>朝代</span>
+          <select id="dynasty">
+            <option value="">全部朝代</option>
+            <option>先秦</option>
+            <option>两汉</option>
+            <option>魏晋</option>
+            <option>唐</option>
+            <option>宋</option>
+            <option>元</option>
+            <option>明</option>
+            <option>清</option>
+          </select>
+        </label>
+
+        <label>
+          <span>作者</span>
+          <input id="author" type="text" placeholder="输入作者名" />
+        </label>
+
+        <label>
+          <span>体裁</span>
+          <select id="poemType">
+            <option value="">全部体裁</option>
+            <option>五言绝句</option>
+            <option>七言绝句</option>
+            <option>五言律诗</option>
+            <option>七言律诗</option>
+            <option>宋词</option>
+            <option>元曲</option>
+            <option>诗经</option>
+            <option>楚辞</option>
+          </select>
+        </label>
+
+        <div class="quick-authors">
+          <span>常用作者</span>
+          <div>
+            <button type="button" data-author="李白">李白</button>
+            <button type="button" data-author="杜甫">杜甫</button>
+            <button type="button" data-author="苏轼">苏轼</button>
+            <button type="button" data-author="李清照">李清照</button>
+          </div>
+        </div>
+
+        <p class="filter-note" id="filterNote">筛选会随搜索或随机请求发送；若接口忽略某项，结果仍按接口返回展示。</p>
+      </aside>
+
+      <section class="results" aria-live="polite">
+        <div class="panel-heading">
+          <div>
+            <h2 id="resultTitle">搜索结果</h2>
+            <p id="resultMeta">准备检索诗库</p>
+          </div>
+          <span id="requestTime">-</span>
+        </div>
+
+        <div id="message" class="message" hidden></div>
+        <div id="poemList" class="poem-list"></div>
+
+        <nav class="pager" aria-label="分页">
+          <button id="prevBtn" type="button">上一页</button>
+          <span id="pageLabel">1</span>
+          <button id="nextBtn" type="button">下一页</button>
+        </nav>
+      </section>
+
+      <article class="reader" aria-live="polite">
+        <div class="reader-art" aria-hidden="true"></div>
+        <div class="reader-head">
+          <span id="readerDynasty" class="dynasty-mark">唐</span>
+          <h2 id="readerTitle">静夜思</h2>
+          <p id="readerAuthor">李白</p>
+        </div>
+
+        <div class="chips" id="readerChips"></div>
+        <div class="poem-body" id="readerBody"></div>
+
+        <div class="reader-actions">
+          <button id="copyBtn" type="button">复制正文</button>
+          <button id="copyJsonBtn" type="button">复制 JSON</button>
+          <span id="copyState" role="status"></span>
+        </div>
+
+        <details class="raw">
+          <summary>原始 JSON</summary>
+          <pre id="rawJson">{}</pre>
+        </details>
+      </article>
+    </main>
+
+    <footer class="foot">
+      <span>数据来源：Poetry API</span>
+      <button id="refreshBtn" type="button">刷新数据</button>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
