@@ -109,3 +109,10 @@ curl -I http://your-domain.com
 curl -I https://your-domain.com
 curl "https://your-domain.com/api/stats?lang=zh-Hans"
 ```
+
+大陆服务器未备案域名可能被拦截；临时访问可用公网 IP 加端口：
+
+```bash
+curl -I http://your-server-ip:8080
+curl "http://your-server-ip:8080/api/stats?lang=zh-Hans"
+```
