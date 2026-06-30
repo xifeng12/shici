@@ -1,4 +1,5 @@
 .git
+.deploy
 certbot
 design-qa.md
 screenshot-*.png
