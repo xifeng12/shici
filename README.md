@@ -30,3 +30,82 @@ python -m http.server 5173
 - `/api/stats`
 
 仓库 README 中的 `/api/v1/*` 本地 Docker 接口暂未做适配。
+
+## Docker + Nginx 部署
+
+服务器前置条件：
+
+- 域名 A 记录指向服务器公网 IP。
+- 防火墙放行 `80` 和 `443`。
+- 已安装 Docker 和 Docker Compose。
+
+首次部署：
+
+```bash
+cp .env.example .env
+mkdir -p certbot/www certbot/conf
+```
+
+编辑 `.env`：
+
+```env
+SHICI_DOMAIN=your-domain.com
+NGINX_CONF=site.http.conf
+```
+
+先启动 HTTP：
+
+```bash
+docker compose up -d --build
+```
+
+签发证书：
+
+```bash
+docker run --rm \
+  -v "$PWD/certbot/www:/var/www/certbot" \
+  -v "$PWD/certbot/conf:/etc/letsencrypt" \
+  certbot/certbot certonly --webroot \
+  -w /var/www/certbot \
+  -d your-domain.com \
+  --email you@example.com \
+  --agree-tos \
+  --no-eff-email
+```
+
+证书成功后，把 `.env` 改成：
+
+```env
+NGINX_CONF=site.https.conf
+```
+
+然后重启：
+
+```bash
+docker compose up -d
+```
+
+后续发布：
+
+```bash
+git pull
+docker compose up -d --build
+```
+
+证书续期：
+
+```bash
+docker run --rm \
+  -v "$PWD/certbot/www:/var/www/certbot" \
+  -v "$PWD/certbot/conf:/etc/letsencrypt" \
+  certbot/certbot renew --webroot -w /var/www/certbot
+docker compose exec shici nginx -s reload
+```
+
+验证：
+
+```bash
+curl -I http://your-domain.com
+curl -I https://your-domain.com
+curl "https://your-domain.com/api/stats?lang=zh-Hans"
+```

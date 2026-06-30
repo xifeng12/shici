@@ -1,0 +1,14 @@
+services:
+  shici:
+    build: .
+    container_name: shici-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SHICI_DOMAIN: ${SHICI_DOMAIN}
+    volumes:
+      - ./docker/nginx/${NGINX_CONF:-site.http.conf}:/etc/nginx/templates/default.conf.template:ro
+      - ./certbot/www:/var/www/certbot:ro
+      - ./certbot/conf:/etc/letsencrypt:ro

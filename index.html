@@ -144,6 +144,9 @@
       <button id="refreshBtn" type="button">刷新数据</button>
     </footer>
 
+    <script>
+      window.SHICI_API_BASE = ["localhost", "127.0.0.1"].includes(location.hostname) ? undefined : "";
+    </script>
     <script src="app.js"></script>
   </body>
 </html>
